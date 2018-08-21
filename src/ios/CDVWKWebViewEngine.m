@@ -783,7 +783,12 @@ static void * KVOContext = &KVOContext;
             absUrl = [absUrl substringToIndex:range.location];
         }
 
-        GCDWebServerFileResponse *response = [GCDWebServerFileResponse responseWithFile:absUrl];
+        GCDWebServerFileResponse *response = nil;
+        if([[NSFileManager defaultManager] fileExistsAtPath:absUrl]) {
+            response = [GCDWebServerFileResponse responseWithFile:absUrl];
+        } else {
+            response = [GCDWebServerFileResponse responseWithStatusCode:404];
+        }
         completionBlock(response);
     }];
     if (restart) {
