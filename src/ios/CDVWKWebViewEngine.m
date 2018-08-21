@@ -281,7 +281,16 @@
 
     #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 110000
     if (@available(iOS 11.0, *)) {
-      [wkWebView.scrollView setContentInsetAdjustmentBehavior:UIScrollViewContentInsetAdjustmentNever];
+        NSString* scrollAdjustment = [settings cordovaSettingForKey:@"ScrollAdjustment"];
+        UIScrollViewContentInsetAdjustmentBehavior behavior = UIScrollViewContentInsetAdjustmentNever;
+        if(scrollAdjustment != nil) {
+            if([scrollAdjustment isEqualToString:@"always"]) {
+                behavior = UIScrollViewContentInsetAdjustmentAlways;
+            } else if ([scrollAdjustment isEqualToString:@"automatic"]) {
+                behavior = UIScrollViewContentInsetAdjustmentAutomatic;
+            }
+        }
+        [wkWebView.scrollView setContentInsetAdjustmentBehavior:behavior];
     }
     #endif
 
